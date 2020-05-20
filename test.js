@@ -178,13 +178,14 @@ let tests = [
 //}, error => {
 //  process.exit(error)
 //})
-
-testGetAllHistory()
-
+//testMaxthonOnly();
+//testGetAllHistory()
+//testGetChromeOnly();
 // setInterval(()=>{
 //   testGetAllHistory();
 // },2000)
 
+testGetAllHistory();
 
 
 
