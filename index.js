@@ -10,7 +10,7 @@ let edge                       = null,
     browsers                   = require("./browsers")
 
 if (process.platform === "win32") {
-  edge = require("electron-edge-js");
+  edge = require("electron-edge");
 
   if (fs.existsSync(
     path.resolve(path.join(__dirname, "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll")))) {
