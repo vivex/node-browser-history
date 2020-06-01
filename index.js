@@ -6,32 +6,35 @@ const sqlite3Async = require('sqlite-async')
 
 let edge                       = null,
     browserHistoryDllPath      = "",
-    getInternetExplorerHistory = null,
+    getInternetExplorerHistory = function () {return [];},
     browsers                   = require("./browsers")
+try {
+      if (process.platform === "win32") {
+        edge = require("electron-edge-js");
 
-if (process.platform === "win32") {
-  edge = require("electron-edge-js");
+        if (fs.existsSync(
+          path.resolve(path.join(__dirname, "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll")))) {
+          browserHistoryDllPath = path.join(
+            __dirname, "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll")
+        }
+        else if (fs.existsSync(
+          path.join(__dirname, "..", "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll"))) {
+          browserHistoryDllPath = path.join(
+            __dirname, "..", "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll")
+        }
+        else {
+          browserHistoryDllPath = path.resolve(path.join(__dirname, "dlls", "IEHistoryFetcher.dll"))
+        }
 
-  if (fs.existsSync(
-    path.resolve(path.join(__dirname, "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll")))) {
-    browserHistoryDllPath = path.join(
-      __dirname, "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll")
-  }
-  else if (fs.existsSync(
-    path.join(__dirname, "..", "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll"))) {
-    browserHistoryDllPath = path.join(
-      __dirname, "..", "..", "..", "src", "renderer", "assets", "dlls", "IEHistoryFetcher.dll")
-  }
-  else {
-    browserHistoryDllPath = path.resolve(path.join(__dirname, "dlls", "IEHistoryFetcher.dll"))
-  }
-
-  getInternetExplorerHistory = edge.func(
-    {
-      assemblyFile: browserHistoryDllPath,
-      typeName: "BrowserHistory.Fetcher",
-      methodName: "getInternetExplorer"
-    })
+        getInternetExplorerHistory = edge.func(
+          {
+            assemblyFile: browserHistoryDllPath,
+            typeName: "BrowserHistory.Fetcher",
+            methodName: "getInternetExplorer"
+          })
+      }
+} catch (e) {
+   console.error(e);      
 }
 
 /**
